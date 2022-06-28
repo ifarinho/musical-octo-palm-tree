@@ -1,6 +1,7 @@
 package db
 
 import (
+	"electro3-project-go/api/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
@@ -21,7 +22,7 @@ func Init() *gorm.DB {
 		log.Fatal(err)
 	}
 
-	err = db.AutoMigrate()
+	err = db.AutoMigrate(&models.Company{}, &models.Mail{}, &models.User{})
 	if err != nil {
 		log.Fatal(err)
 	}
