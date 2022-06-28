@@ -1,9 +1,12 @@
 package models
 
-import "time"
+import (
+	"github.com/google/uuid"
+	"time"
+)
 
 type Company struct {
-	ID        int       `json:"id" gorm:"primaryKey;not null"`
+	ID        uuid.UUID `json:"id" gorm:"primaryKey;not null"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Name      string    `json:"name" gorm:"not null"`

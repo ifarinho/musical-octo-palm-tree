@@ -3,11 +3,13 @@ package services
 import (
 	"electro3-project-go/api/models"
 	"electro3-project-go/db"
+	"github.com/google/uuid"
 )
 
 /* create and delete */
 
 func CreateCompany(company *models.Company, name string, email string, secret []byte) error {
+	company.ID = uuid.New()
 	company.Name = name
 	company.Email = email
 	company.Secret = secret
@@ -25,7 +27,7 @@ func DeleteCompany(company *models.Company, email string) error {
 
 /* get functions */
 
-func GetCompanyByID(company *models.Company, id int) error {
+func GetCompanyByID(company *models.Company, id uuid.UUID) error {
 	res := db.DB().Where("id = ?", id).First(&company)
 
 	return res.Error
@@ -39,7 +41,7 @@ func GetCompanyByEmail(company *models.Company, email string) error {
 
 /* update functions */
 
-func UpdateCompanyEmail(company *models.Company, id int, email string) error {
+func UpdateCompanyEmail(company *models.Company, id uuid.UUID, email string) error {
 	res := db.DB().Model(&company).Where("id = ?", id).Update("email", email)
 
 	return res.Error

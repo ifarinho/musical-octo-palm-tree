@@ -3,9 +3,11 @@ package services
 import (
 	"electro3-project-go/api/models"
 	"electro3-project-go/db"
+	"github.com/google/uuid"
 )
 
 func CreateUser(user *models.User, company models.Company, name string, email string, pass []byte, role string) error {
+	user.ID = uuid.New()
 	user.Name = name
 	user.Email = email
 	user.Password = pass
@@ -25,7 +27,7 @@ func DeleteUser(user *models.User, email string) error {
 
 /* get functions */
 
-func GetUserByID(user *models.User, id int) error {
+func GetUserByID(user *models.User, id uuid.UUID) error {
 	res := db.DB().Where("id = ?", id).First(&user)
 
 	return res.Error
@@ -39,7 +41,7 @@ func GetUserByEmail(user *models.User, email string) error {
 
 /* update functions */
 
-func UpdateUserEmail(user *models.User, id int, email string) error {
+func UpdateUserEmail(user *models.User, id uuid.UUID, email string) error {
 	res := db.DB().Model(&user).Where("id = ?", id).Update("email", email)
 
 	return res.Error

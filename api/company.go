@@ -4,9 +4,9 @@ import (
 	"electro3-project-go/api/models"
 	"electro3-project-go/api/services"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
-	"strconv"
 )
 
 /* create and delete */
@@ -75,13 +75,9 @@ func DeleteCompany(c *gin.Context) {
 func GetCompanyByID(c *gin.Context) {
 	company := models.Company{}
 
-	id, err := strconv.ParseInt(c.Param("id"), 0, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid param"})
-		return
-	}
+	id, _ := uuid.Parse(c.Param("id"))
 
-	err = services.GetCompanyByID(&company, int(id))
+	err := services.GetCompanyByID(&company, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not find the requested company"})
 		return
@@ -123,7 +119,7 @@ func UpdateCompanyEmail(c *gin.Context) {
 	company := models.Company{}
 	var data = make(map[string]string)
 
-	id, err := strconv.ParseInt(c.Param("id"), 0, 64)
+	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid param"})
 		return
@@ -141,7 +137,7 @@ func UpdateCompanyEmail(c *gin.Context) {
 		return
 	}
 
-	err = services.UpdateCompanyEmail(&company, int(id), data["email"])
+	err = services.UpdateCompanyEmail(&company, id, data["email"])
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "There was an error updating email address"})
 		return

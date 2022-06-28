@@ -24,9 +24,17 @@ func Default() *gin.Engine {
 	u.GET("/:id", api.GetUserByID)
 	u.POST("/email", api.GetUserByEmail)
 	u.POST("/create/:id", api.CreateUser)
-	c.PUT("/update-email/:id", api.UpdateUserEmail)
-	c.PUT("/update-password", api.UpdateUserPassword)
+	u.PUT("/update-email/:id", api.UpdateUserEmail)
+	u.PUT("/update-password", api.UpdateUserPassword)
 	u.DELETE("/delete", api.DeleteUser)
+
+	/* mail routes */
+	m := r.Group("/api/mail")
+
+	m.GET("/user-sent/:id", api.GetSentMails)
+	m.POST("/user-received", api.GetReceivedMails)
+	m.POST("/send", api.SendEmail)
+	m.DELETE("/:id", api.DeleteMail)
 
 	return r
 }

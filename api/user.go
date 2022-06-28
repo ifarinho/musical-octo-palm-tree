@@ -4,9 +4,9 @@ import (
 	"electro3-project-go/api/models"
 	"electro3-project-go/api/services"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
-	"strconv"
 )
 
 /* create and delete */
@@ -16,7 +16,7 @@ func CreateUser(c *gin.Context) {
 	company := models.Company{}
 	var data = make(map[string]string)
 
-	id, err := strconv.ParseInt(c.Param("id"), 0, 64)
+	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid param"})
 		return
@@ -28,7 +28,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	err = services.GetCompanyByID(&company, int(id))
+	err = services.GetCompanyByID(&company, id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Company does not exist"})
 		return
@@ -82,13 +82,13 @@ func DeleteUser(c *gin.Context) {
 func GetUserByID(c *gin.Context) {
 	user := models.User{}
 
-	id, err := strconv.ParseInt(c.Param("id"), 0, 64)
+	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid param"})
 		return
 	}
 
-	err = services.GetUserByID(&user, int(id))
+	err = services.GetUserByID(&user, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not find the requested User"})
 		return
@@ -122,7 +122,7 @@ func UpdateUserEmail(c *gin.Context) {
 	user := models.User{}
 	var data = make(map[string]string)
 
-	id, err := strconv.ParseInt(c.Param("id"), 0, 64)
+	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid param"})
 		return
@@ -140,7 +140,7 @@ func UpdateUserEmail(c *gin.Context) {
 		return
 	}
 
-	err = services.UpdateUserEmail(&user, int(id), data["email"])
+	err = services.UpdateUserEmail(&user, id, data["email"])
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "There was an error updating email address"})
 		return

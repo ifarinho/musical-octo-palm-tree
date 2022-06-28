@@ -17,7 +17,9 @@ func Init() *gorm.DB {
 	var err error
 	dsn := "monty:password@tcp(127.0.0.1:3306)/electro?charset=utf8mb4&parseTime=True&loc=Local"
 
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+		DisableForeignKeyConstraintWhenMigrating: true,
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
