@@ -1,10 +1,11 @@
 package db
 
 import (
-	"electro3-project-go/api/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
+	"mail-app/api/models"
+	"mail-app/config"
 )
 
 var db *gorm.DB
@@ -15,9 +16,8 @@ func DB() *gorm.DB {
 
 func Init() *gorm.DB {
 	var err error
-	dsn := "monty:password@tcp(127.0.0.1:3306)/electro?charset=utf8mb4&parseTime=True&loc=Local"
 
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+	db, err = gorm.Open(mysql.Open(config.Dsn), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 	if err != nil {

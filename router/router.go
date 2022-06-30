@@ -1,8 +1,8 @@
 package router
 
 import (
-	"electro3-project-go/api"
 	"github.com/gin-gonic/gin"
+	"mail-app/api"
 )
 
 func Default() *gin.Engine {

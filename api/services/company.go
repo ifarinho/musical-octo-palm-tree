@@ -1,9 +1,9 @@
 package services
 
 import (
-	"electro3-project-go/api/models"
-	"electro3-project-go/db"
 	"github.com/google/uuid"
+	"mail-app/api/models"
+	"mail-app/db"
 )
 
 /* create and delete */

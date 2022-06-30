@@ -1,9 +1,9 @@
 package main
 
 import (
-	"electro3-project-go/db"
-	"electro3-project-go/router"
 	"log"
+	"mail-app/db"
+	"mail-app/router"
 )
 
 func main() {
@@ -11,5 +11,5 @@ func main() {
 
 	db.Init()
 
-	log.Fatal(r.Run(":8080"))
+	log.Fatal(r.Run())
 }

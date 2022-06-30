@@ -1,9 +1,9 @@
 package services
 
 import (
-	"electro3-project-go/api/models"
-	"electro3-project-go/db"
 	"github.com/google/uuid"
+	"mail-app/api/models"
+	"mail-app/db"
 )
 
 func CreateUser(user *models.User, company models.Company, name string, email string, pass []byte, role string) error {
@@ -11,7 +11,7 @@ func CreateUser(user *models.User, company models.Company, name string, email st
 	user.Name = name
 	user.Email = email
 	user.Password = pass
-	user.Company = company
+	user.Company = &company
 	user.Role = role
 
 	res := db.DB().Create(user)
@@ -28,13 +28,13 @@ func DeleteUser(user *models.User, email string) error {
 /* get functions */
 
 func GetUserByID(user *models.User, id uuid.UUID) error {
-	res := db.DB().Where("id = ?", id).First(&user)
+	res := db.DB().Preload("Company").Where("id = ?", id).First(&user)
 
 	return res.Error
 }
 
 func GetUserByEmail(user *models.User, email string) error {
-	res := db.DB().Where("email = ?", email).First(&user)
+	res := db.DB().Preload("Company").Where("email = ?", email).First(&user)
 
 	return res.Error
 }

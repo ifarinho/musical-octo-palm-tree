@@ -13,6 +13,6 @@ type User struct {
 	Email     string    `json:"email" gorm:"not null"`
 	Password  []byte    `json:"password" gorm:"not null"`
 	FKCompany uuid.UUID `json:"fk_company" gorm:"not null"`
-	Company   Company   `json:"company" gorm:"foreignKey:FKCompany;not null"`
+	Company   *Company  `json:"company" gorm:"foreignKey:FKCompany;not null"`
 	Role      string    `json:"role" gorm:"not null"`
 }

@@ -1,20 +1,30 @@
 package api
 
 import (
-	"electro3-project-go/api/models"
-	"electro3-project-go/api/services"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"mail-app/api/models"
+	"mail-app/api/services"
+	"mime/multipart"
 	"net/http"
 )
 
 /* send and delete */
 
 func SendEmail(c *gin.Context) {
+	var file multipart.File
+
 	mail := models.Mail{}
 	user := models.User{}
-	var data = make(map[string]string)
+	data := &struct {
+		Email      string                `form:"email"`
+		Password   string                `form:"password"`
+		Receivers  []string              `form:"receivers"`
+		Subject    string                `form:"subject"`
+		Body       string                `form:"body"`
+		Attachment *multipart.FileHeader `form:"attachment"`
+	}{}
 
 	err := c.Bind(&data)
 	if err != nil {
@@ -22,31 +32,51 @@ func SendEmail(c *gin.Context) {
 		return
 	}
 
-	err = services.GetUserByEmail(&user, data["email"])
+	err = services.GetUserByEmail(&user, data.Email)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user email"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid sender email"})
 		return
 	}
 
-	err = bcrypt.CompareHashAndPassword(user.Password, []byte(data["password"]))
+	err = bcrypt.CompareHashAndPassword(user.Password, []byte(data.Password))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Incorrect password"})
 		return
 	}
 
-	err = services.CreateMail(&mail, user, data["receiver"], data["subject"], data["body"])
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating email"})
-		return
+	for _, r := range data.Receivers {
+		err = services.CreateMail(&mail, user, r, data.Subject, data.Body)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating email"})
+			return
+		}
 	}
 
-	err = services.SendMail(&mail, data["password"])
+	if data.Attachment != nil {
+		file, err = data.Attachment.Open()
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Error reading file"})
+			return
+		}
+
+		err = services.UploadFileToBucket(file)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Error uploading file"})
+			return
+		}
+	}
+
+	err = services.SendEmailSES(&mail, data.Receivers, file)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error sending email"})
 		return
 	}
 
-	c.JSON(http.StatusOK, mail)
+	if file != nil {
+		_ = file.Close()
+	}
+
+	c.JSON(http.StatusOK, "Email successfully sent")
 }
 
 func DeleteMail(c *gin.Context) {

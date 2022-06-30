@@ -1,11 +1,11 @@
 package api
 
 import (
-	"electro3-project-go/api/models"
-	"electro3-project-go/api/services"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"mail-app/api/models"
+	"mail-app/api/services"
 	"net/http"
 )
 
