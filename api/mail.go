@@ -10,8 +10,7 @@ import (
 	"net/http"
 )
 
-/* send and delete */
-
+// SendEmail POST /api/mail/send
 func SendEmail(c *gin.Context) {
 	var file multipart.File
 
@@ -79,6 +78,7 @@ func SendEmail(c *gin.Context) {
 	c.JSON(http.StatusOK, "Email successfully sent")
 }
 
+// DeleteMail DELETE /api/mail/:id
 func DeleteMail(c *gin.Context) {
 	mail := models.Mail{}
 
@@ -96,8 +96,7 @@ func DeleteMail(c *gin.Context) {
 	c.JSON(http.StatusOK, "Email deleted successfully")
 }
 
-/* get functions */
-
+// GetSentMails GET /api/mail/user-sent/:id
 func GetSentMails(c *gin.Context) {
 	user := models.User{}
 	var mails []models.Mail
@@ -123,6 +122,7 @@ func GetSentMails(c *gin.Context) {
 	c.JSON(http.StatusOK, mails)
 }
 
+// GetReceivedMails POST /api/mail/user-received
 func GetReceivedMails(c *gin.Context) {
 	var mails []models.Mail
 	var data = make(map[string]string)

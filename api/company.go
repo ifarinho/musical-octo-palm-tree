@@ -9,8 +9,7 @@ import (
 	"net/http"
 )
 
-/* create and delete */
-
+// CreateCompany POST /api/company/create
 func CreateCompany(c *gin.Context) {
 	company := models.Company{}
 	var data = make(map[string]string)
@@ -39,6 +38,7 @@ func CreateCompany(c *gin.Context) {
 	c.JSON(http.StatusCreated, "Company successfully created")
 }
 
+// DeleteCompany DELETE /api/company/delete
 func DeleteCompany(c *gin.Context) {
 	company := models.Company{}
 	var data = make(map[string]string)
@@ -70,8 +70,7 @@ func DeleteCompany(c *gin.Context) {
 	c.JSON(http.StatusOK, "Successfully deleted Company")
 }
 
-/* get functions */
-
+// GetCompanyByID GET /api/company/:id
 func GetCompanyByID(c *gin.Context) {
 	company := models.Company{}
 
@@ -90,6 +89,7 @@ func GetCompanyByID(c *gin.Context) {
 	})
 }
 
+// GetCompanyByEmail POST /api/company/email
 func GetCompanyByEmail(c *gin.Context) {
 	company := models.Company{}
 	var data = make(map[string]string)
@@ -113,8 +113,7 @@ func GetCompanyByEmail(c *gin.Context) {
 	})
 }
 
-/* update functions */
-
+// UpdateCompanyEmail PUT /api/company/update-email/:id
 func UpdateCompanyEmail(c *gin.Context) {
 	company := models.Company{}
 	var data = make(map[string]string)
@@ -146,6 +145,7 @@ func UpdateCompanyEmail(c *gin.Context) {
 	c.JSON(http.StatusOK, "Email updated successfully")
 }
 
+// UpdateCompanySecretPhrase PUT /api/company/update-secret-phrase
 func UpdateCompanySecretPhrase(c *gin.Context) {
 	company := models.Company{}
 	var data = make(map[string]string)

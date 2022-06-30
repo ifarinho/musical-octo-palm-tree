@@ -9,8 +9,7 @@ import (
 	"net/http"
 )
 
-/* create and delete */
-
+// CreateUser POST /api/user/create/:id (company ID)
 func CreateUser(c *gin.Context) {
 	user := models.User{}
 	company := models.Company{}
@@ -46,6 +45,7 @@ func CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, "User created successfully")
 }
 
+// DeleteUser DELETE /api/user/delete
 func DeleteUser(c *gin.Context) {
 	user := models.User{}
 	var data = make(map[string]string)
@@ -77,8 +77,7 @@ func DeleteUser(c *gin.Context) {
 	c.JSON(http.StatusOK, "User successfully deleted")
 }
 
-/* get functions */
-
+// GetUserByID GET /api/user/:id
 func GetUserByID(c *gin.Context) {
 	user := models.User{}
 
@@ -97,6 +96,7 @@ func GetUserByID(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// GetUserByEmail POST /api/user/email
 func GetUserByEmail(c *gin.Context) {
 	user := models.User{}
 	var data = make(map[string]string)
@@ -116,8 +116,7 @@ func GetUserByEmail(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-/* update functions */
-
+// UpdateUserEmail PUT /api/user/update-email/:id
 func UpdateUserEmail(c *gin.Context) {
 	user := models.User{}
 	var data = make(map[string]string)
@@ -149,6 +148,7 @@ func UpdateUserEmail(c *gin.Context) {
 	c.JSON(http.StatusOK, "Email updated successfully")
 }
 
+// UpdateUserPassword PUT /api/user/update-password
 func UpdateUserPassword(c *gin.Context) {
 	user := models.User{}
 	var data = make(map[string]string)
