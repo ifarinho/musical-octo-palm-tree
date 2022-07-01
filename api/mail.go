@@ -58,6 +58,8 @@ func SendEmail(c *gin.Context) {
 			return
 		}
 
+		defer file.Close()
+
 		err = services.UploadFileToBucket(file)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Error uploading file"})
@@ -69,10 +71,6 @@ func SendEmail(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error sending email"})
 		return
-	}
-
-	if file != nil {
-		_ = file.Close()
 	}
 
 	c.JSON(http.StatusOK, "Email successfully sent")
@@ -91,6 +89,7 @@ func DeleteMail(c *gin.Context) {
 	err = services.DeleteMail(&mail, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error deleting mail"})
+		return
 	}
 
 	c.JSON(http.StatusOK, "Email deleted successfully")

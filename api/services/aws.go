@@ -11,6 +11,7 @@ import (
 	"io"
 	"mail-app/api/models"
 	"mail-app/config"
+	"net/textproto"
 )
 
 func creds() *session.Session {
@@ -25,7 +26,7 @@ func creds() *session.Session {
 func UploadFileToBucket(file io.ReadSeeker) error {
 	_, err := s3.New(creds()).PutObject(&s3.PutObjectInput{
 		Bucket: aws.String(config.S3Bucket),
-		Key:    aws.String(uuid.NewString()),
+		Key:    aws.String(uuid.NewString() + ".pdf"),
 		Body:   file,
 	})
 
@@ -38,13 +39,20 @@ func SendEmailSES(mail *models.Mail, receivers []string, attachment io.ReadSeeke
 
 	e.From = mail.Sender.Email
 	e.To = receivers
-	e.Cc = receivers
 	e.Subject = mail.Subject
 	e.Text = []byte(mail.Body)
+	e.Headers = textproto.MIMEHeader{}
 
 	if attachment != nil {
-		_, err := e.Attach(attachment, "attachment.pdf", "")
-		return err
+		_, err := attachment.Seek(0, 0)
+		if err != nil {
+			return err
+		}
+
+		_, err = e.Attach(attachment, "attachment.pdf", "application/pdf")
+		if err != nil {
+			return err
+		}
 	}
 
 	bytes, err := e.Bytes()
