@@ -154,6 +154,8 @@ PUT request /api/user/update-password
     "password": "new-password"
 }
 ```
+&nbsp;
+#### Mails
 Enviar mail:
 * Si el destinatario es uno solo, debe estar dentro de un array igual.
 * El archivo adjunto es opcional.
